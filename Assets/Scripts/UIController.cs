@@ -1,39 +1,63 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UIController : MonoBehaviour
 {
-    public GameObject uiPanel;  // อ้างอิงไปยัง GameObject ของ UI ที่ต้องการปิด
+    [Header("Panels")]
+    public GameObject uiPanel;  
     public GameObject uiShop;
     public GameObject uiStart;
 
+    [Header("Displays")]
+    public TextMeshProUGUI coinText; // ลาก TextMeshPro มาใส่ตรงนี้
+
+    private void Start()
+    {
+        // ลงทะเบียนรับข่าวสาร (Subscribe)
+        if (CoinManager.Instance != null)
+        {
+            CoinManager.Instance.OnCoinChanged += UpdateCoinDisplay;
+            
+            // อัปเดตทันทีหนึ่งครั้งเผื่อค่าเพี้ยน
+            UpdateCoinDisplay(CoinManager.Instance.coinCount);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // ยกเลิกการลงทะเบียน (Unsubscribe) กัน Error
+        if (CoinManager.Instance != null)
+        {
+            CoinManager.Instance.OnCoinChanged -= UpdateCoinDisplay;
+        }
+    }
+
+    // ฟังก์ชันนี้จะถูกเรียกเองอัตโนมัติเมื่อเงินเปลี่ยน
+    private void UpdateCoinDisplay(int amount)
+    {
+        if (coinText != null)
+        {
+            coinText.text = amount.ToString();
+        }
+    }
+
+    // ฟังก์ชันเปิดปิด UI อื่นๆ
     public void CloseUI()
     {
-        // ทำให้ UI ซ่อน
         uiPanel.SetActive(false);
         uiShop.SetActive(true);
     }
+
     public void OpenUI()
     {
-        // ทำให้ UI แสดง
         uiPanel.SetActive(true);
         uiShop.SetActive(false);
-
     }
 
     public void StartUI()
     {
-
         uiStart.SetActive(false);
-    }
-
-    public void QuitGame()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false; // หยุดการเล่นใน Editor
-#else
-    Application.Quit(); // ปิดเกมใน Build จริง
-#endif
     }
 }

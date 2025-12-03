@@ -1,33 +1,30 @@
-﻿using TMPro;
+﻿using System;
 using UnityEngine;
 
 public class CoinManager : MonoBehaviour
 {
     public static CoinManager Instance;
-    public TextMeshProUGUI coinText;
-    public int coinCount = 5; // กำหนดค่าเริ่มต้น
+    public int coinCount = 5; // เงินเริ่มต้น
+
+    // Event สำหรับแจ้งเตือนเมื่อเงินเปลี่ยน (Observer Pattern)
+    public event Action<int> OnCoinChanged; 
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     private void Start()
     {
-        UpdateCoinUI();
+        // แจ้งเตือนค่าเริ่มต้นตอนเกมเริ่ม
+        OnCoinChanged?.Invoke(coinCount);
     }
 
     public void AddCoins(int amount)
     {
         coinCount += amount;
-        UpdateCoinUI();
+        OnCoinChanged?.Invoke(coinCount); // แจ้ง UI
     }
 
     public bool SpendCoins(int amount)
@@ -35,18 +32,9 @@ public class CoinManager : MonoBehaviour
         if (coinCount >= amount)
         {
             coinCount -= amount;
-            UpdateCoinUI();
+            OnCoinChanged?.Invoke(coinCount); // แจ้ง UI
             return true;
         }
-        Debug.Log("Coin ไม่พอ!");
         return false;
-    }
-
-    private void UpdateCoinUI()
-    {
-        if (coinText != null)
-        {
-            coinText.text = coinCount.ToString();
-        }
     }
 }
