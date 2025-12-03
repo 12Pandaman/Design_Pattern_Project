@@ -1,4 +1,8 @@
 MeowGarden - Simulation Game Prototype 
+
+คลิปสาธิต : https://youtu.be/g9Eaz8TXLds
+
+
 โปรเจกต์เกมจำลองการปลูกต้นไม้และจัดการทรัพยากร พัฒนาด้วย Unity (C#) โดยเน้นการนำ Design Patterns มาประยุกต์ใช้เพื่อแก้ปัญหาการเขียนโค้ด ให้มีความยืดหยุ่น (Flexible), ลดการยึดติดกันของระบบ (Decoupling), และง่ายต่อการขยายเพิ่มเติม (Scalable)
 
 ฟีเจอร์หลัก (Gameplay)
